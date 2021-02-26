@@ -9,6 +9,17 @@ Green clock middle gives your the actual timezone that you're from
 
 Orange clock gives the last timezone (clock) with date of your choice
 
+Thingiverse:
+BTTF Style clock - makes 3 clocks work
+https://www.thingiverse.com/thing:2980120
+
+Main code from:
+Marquee Scroller - makes the WiFi with correct time
+https://www.thingiverse.com/thing:2867294
+
+Timezone Library: (makes the two clocks - Red & Orange work)
+https://github.com/JChristensen/Timezone
+
 Everything works from a 5V 2A / 3A power supply hooked up to an ESP32-DevKitC V4
 using 2 WAGO clips:
 
