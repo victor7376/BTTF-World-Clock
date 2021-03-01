@@ -43,6 +43,9 @@
 #include "SevenSegmentExtended.h"
 #include <WiFi.h>           // For ESP32 WiFi connection
 #include <Timezone.h>    // https://github.com/JChristensen/Timezone
+#include <ArduinoOTA.h>
+#include <WiFiUdp.h>
+#include <ESPmDNS.h>
 
 //=========================== Your WIFI Network Details ===============================
 const char* ssid     = "YOUR-SSID-HERE";
@@ -64,10 +67,13 @@ int year_orange = 1976; // The year you wish to see on the bottom section
 // Pins are as follows:
 // RED CLOCK:
 // CLK - 18, Displays: 19, 21, 23, 22, 12
+// AM - 17 / PM - 5
 // GREEN CLOCK:
 // CLK - 15, Displays: 2, 4, 16, 17 & 5
+// AM - 22 / PM - 12
 // Orange Clock:
 // CLK - 14, Displays: 27, 26, 33, 32 & 35
+// AM - 32 / PM - 36
 //=====================================================================================
 
 //=====================================================================================
@@ -132,6 +138,10 @@ int minutesBetweenRefreshing = 1;
 // LED Settings
 const int offset = 1;
 int refresh = 0;
+
+// OTA
+boolean ENABLE_OTA = true;    // this will allow you to load firmware to the device over WiFi (see OTA for ESP8266)
+String OTA_Password = "";     // Set an OTA password here -- leave blank if you don't want to be prompted for password
 
 // TimeDB - do NOT alter
 TimeDB TimeDB("");
@@ -249,29 +259,74 @@ void setup() {
     red2.setColonOn(0);                 // Switch off ":" for Red "year"
 
     // Starting up WiFi
-    Serial.println();
-    Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
+    // Serial.println();
+    // Serial.println();
+    // Serial.print("Connecting to ");
+    // Serial.println(ssid);
 
+    // WiFi.begin(ssid, password);
+
+    // while (WiFi.status() != WL_CONNECTED) {
+    //     delay(500);
+    //     Serial.print(".");
+    // }
+
+    // Serial.println("");
+    // Serial.println("WiFi connected");
+    // Serial.println("IP address: ");
+    // Serial.println(WiFi.localIP());
+
+    Serial.println("Booting");
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
-
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
+    while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+      Serial.println("Connection Failed! Rebooting...");
+      delay(5000);
+      ESP.restart();
     }
 
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
+    Serial.println();
+
+    ArduinoOTA
+      .onStart([]() {
+        String type;
+        if (ArduinoOTA.getCommand() == U_FLASH)
+          type = "sketch";
+        else // U_SPIFFS
+          type = "filesystem";
+
+        // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+        Serial.println("Start updating " + type);
+      })
+      .onEnd([]() {
+        Serial.println("\nEnd");
+      })
+      .onProgress([](unsigned int progress, unsigned int total) {
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+      })
+      .onError([](ota_error_t error) {
+        Serial.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+        else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+        else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+        else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+        else if (error == OTA_END_ERROR) Serial.println("End Failed");
+      });
+
+      ArduinoOTA.begin();
+
+      Serial.println("Ready");
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
+  
 
      Serial.println();
 }
 
 // Now for the loop which will run and run....
 void loop() {
-  
+    ArduinoOTA.handle();
+
     // Retrieving Date & Time from TimezoneDB
     if ((getMinutesFromLastRefresh() >= minutesBetweenDataRefresh) || lastEpoch == 0) {
         getTimeData();
@@ -314,30 +369,30 @@ void loop() {
 
         //This needs testing  first
         // Red AM & PM
-//        if(hour(red)>=13){
-//            digitalWrite(redAM,0);
-//            digitalWrite(redPM,1);
-//        } else if (hour(red)==12){ 
-//            digitalWrite(redAM,0);
-//            digitalWrite(redPM,1);
-//        }
-//            else  {
-//            digitalWrite(redAM,1);
-//            digitalWrite(redPM,0);
-//        }
+       if(hour(red)>=13){
+           digitalWrite(redAM,0);
+           digitalWrite(redPM,1);
+       } else if (hour(red)==12){ 
+           digitalWrite(redAM,0);
+           digitalWrite(redPM,1);
+       }
+           else  {
+           digitalWrite(redAM,1);
+           digitalWrite(redPM,0);
+       }
 
         // Orange AM & PM
-//        if(hour(orange)>=13){
-//            digitalWrite(orangeAM,0);
-//            digitalWrite(orangePM,1);
-//        } else if (hour(orange)==12){ 
-//            digitalWrite(orangeAM,0);
-//            digitalWrite(orangePM,1);
-//        }
-//            else  {
-//            digitalWrite(orangeAM,1);
-//            digitalWrite(orangePM,0);
-//        }
+       if(hour(orange)>=13){
+           digitalWrite(orangeAM,0);
+           digitalWrite(orangePM,1);
+       } else if (hour(orange)==12){ 
+           digitalWrite(orangeAM,0);
+           digitalWrite(orangePM,1);
+       }
+           else  {
+           digitalWrite(orangeAM,1);
+           digitalWrite(orangePM,0);
+       }
       
         //=================================================================================
         // Now Clocks part
