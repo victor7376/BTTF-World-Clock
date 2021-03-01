@@ -73,7 +73,7 @@ int year_orange = 1976; // The year you wish to see on the bottom section
 // AM - 22 / PM - 12
 // Orange Clock:
 // CLK - 14, Displays: 27, 26, 33, 32 & 35
-// AM - 32 / PM - 36
+// AM - 32 / PM - 25
 //=====================================================================================
 
 //=====================================================================================
@@ -120,7 +120,7 @@ SevenSegmentTM1637        orange2(PIN_CLK_Orange, PIN_DIO_O2);
 const byte PIN_DIO_O3 = 33;   
 SevenSegmentExtended       orange3(PIN_CLK_Orange, PIN_DIO_O3); 
 int orangeAM = 32;
-int orangePM = 35;
+int orangePM = 25;
 //=====================================================================================
 // End displays
 //=====================================================================================
