@@ -33,5 +33,13 @@ https://www.amazon.co.uk/gp/product/B07Q4WZ1J9/ref=ppx_yo_dt_b_search_asin_title
 
 ==================================
 
-Testing Full AM / PM pins and OTA
+Features:
 
+* Middle row YOUR timezone
+* Top row (RED) Australia Timezone (Can be changed by looking onn the Timezone Library)
+* Bottom row (Orange) Los Angeles Timezone (Can be changes in the settings like Red Zone)
+* Shows AM & PM For all timezones
+* Turn on and off at certain times (Power saver) displays turns off at 22:30 to 09:30 can be changed (line 328)
+
+If you have any issues with the displays, it can be useful to remove the resisters on the back of the displays.
+Just Google 'Sevensegment display remove capacitors'.
