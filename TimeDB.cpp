@@ -75,18 +75,25 @@ time_t TimeDB::getTime()
   client.stop(); //stop client
   Serial.println(result);
 
+
+  int timeStart = result.lastIndexOf('{'); // trim response to start of JSON -- issue 194
+  result = result.substring(timeStart);
   char jsonArray [result.length() + 1];
   result.toCharArray(jsonArray, sizeof(jsonArray));
   jsonArray[result.length() + 1] = '\0';
-  DynamicJsonBuffer json_buf; // v5
-  JsonObject& root = json_buf.parseObject(jsonArray); //v5
+
+  // V5
+DynamicJsonBuffer json_buf;
+  JsonObject& root = json_buf.parseObject(jsonArray);
+  
   localMillisAtUpdate = millis();
   Serial.println();
-   if (root["timestamp"] == 0) { //v5 
+  if (root["timestamp"] == 0) {
     return 20;
   } else {
-    return (unsigned long) root["timestamp"]; //v5
+    return (unsigned long) root["timestamp"];
   }
+  
 }
 
 String TimeDB::getDayName() {
