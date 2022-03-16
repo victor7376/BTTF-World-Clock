@@ -86,11 +86,6 @@ int orangePM = 25;
 // End displays
 //===============================
 
-/* Useful Constants */
-#define SECS_PER_MIN  (60UL)
-#define SECS_PER_HOUR (3600UL)
-#define SECS_PER_DAY  (SECS_PER_HOUR * 24L)
-
 int minutesBetweenDataRefresh = 15;  // Time in minutes between data refresh (default 15 minutes)
 boolean IS_24HOUR = false; // 23:00 millitary 24 hour clock
 int minutesBetweenRefreshing = 1; 
