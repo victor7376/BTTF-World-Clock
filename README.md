@@ -31,9 +31,7 @@ WAGO clips
 https://www.amazon.co.uk/gp/product/B07Q4WZ1J9/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
 
 
-==================================
-
-Features:
+# Features:
 
 * Middle row YOUR timezone
 * Top row (RED) Australia Timezone (Can be changed by looking onn the Timezone Library)
@@ -43,3 +41,8 @@ Features:
 
 If you have any issues with the displays, it can be useful to remove the resisters on the back of the displays.
 Just Google 'Sevensegment display remove capacitors'.
+
+# Examples
+
+In the folder - *Examples* you will find two different examples of how this clock is wired
+The first is the default wiring guide, the 2nd is if you have issues with the first & the displays do not light up.
